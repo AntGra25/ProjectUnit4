@@ -1,4 +1,12 @@
 import sqlite3
+from passlib.hash import sha256_crypt
+
+hasher = sha256_crypt.using(rounds=30000)
+def make_hash(password):
+    return hasher.hash(password)
+
+def check_hash(password, hash):
+    return hasher.verify(password, hash)
 
 
 class DatabaseWorker:
