@@ -53,10 +53,6 @@ def login():
 
 
 
-
-# @app.route('/recover')
-#
-#
 @app.route('/home')
 def home():
     db = DatabaseWorker('Reddit.db')
