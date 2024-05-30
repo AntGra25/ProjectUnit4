@@ -7,7 +7,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-app.config['UPLOAD_FOLDER'] = 'static'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
