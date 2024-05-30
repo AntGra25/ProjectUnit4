@@ -126,6 +126,28 @@ def view_post(post_id):
     return render_template('view_post.html', post=post, comments=comments)
 
 
+@app.route('/post/<int:post_id>/edit_comment/<int:comment_id>', methods=['GET', 'POST'])
+def edit_comment(post_id, comment_id):
+    db = DatabaseWorker('Reddit.db')
+    comment = db.search(query=f'SELECT content FROM comments WHERE id={comment_id}', multiple=False)
+
+    if request.method == 'POST':
+        new_content = request.form.get('content')
+        db.run_query(query=f"UPDATE comments SET content='{new_content}' WHERE id={comment_id}")
+        db.close()
+        return redirect(url_for('view_post', post_id=post_id))
+
+    db.close()
+    return render_template('edit_comment.html', post_id=post_id, comment_id=comment_id, content=comment[0])
+
+@app.route('/post/<int:post_id>/delete_comment/<int:comment_id>', methods=['POST'])
+def delete_comment(post_id, comment_id):
+    db = DatabaseWorker('Reddit.db')
+    db.run_query(query=f"DELETE FROM comments WHERE id={comment_id}")
+    db.close()
+    return redirect(url_for('view_post', post_id=post_id))
+
+
 
 @app.route('/create_post', methods=['GET', 'POST'])
 def create_post():
