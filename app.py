@@ -66,8 +66,7 @@ def login():
 @app.route('/home')
 def home():
     db = DatabaseWorker('Reddit.db')
-    posts = db.search("SELECT * FROM posts", multiple=True)
-    print(posts)
+    posts = db.search(query='SELECT posts.id, posts.title, posts.content, users.username, posts.post_time, posts.upvotes - posts.downvotes, posts.image_url FROM posts JOIN users ON posts.user_id = users.id', multiple=True)
     db.close()
     return render_template('home.html', posts=posts)
 
@@ -176,6 +175,43 @@ def create_post():
     subreddits = db.search(query='SELECT name FROM subreddits', multiple=True)
     db.close()
     return render_template('create_post.html', subreddits=subreddits)
+
+
+@app.route('/post/<int:post_id>/vote/<string:vote>', methods=['POST'])
+def vote_post(post_id, vote):
+    user_id = request.cookies.get('user_id')
+    if not user_id:
+        flash('You must be logged in to vote.')
+        return redirect(url_for('login'))
+
+    db = DatabaseWorker('Reddit.db')
+    existing_vote = db.search(query=f"SELECT * FROM votes WHERE user_id={user_id} AND post_id={post_id}", multiple=False)
+
+    if existing_vote:
+        if (existing_vote[3] == 1 and vote == 'up') or (existing_vote[3] == -1 and vote == 'down'):
+            db.run_query(query=f"DELETE FROM votes WHERE user_id={user_id} AND post_id={post_id}")
+            if vote == 'up':
+                db.run_query(query=f"UPDATE posts SET upvotes = upvotes - 1 WHERE id={post_id}")
+            else:
+                db.run_query(query=f"UPDATE posts SET downvotes = downvotes - 1 WHERE id={post_id}")
+        else:
+            db.run_query(query=f"UPDATE votes SET vote = {1 if vote == 'up' else -1} WHERE user_id={user_id} AND post_id={post_id}")
+            if vote == 'up':
+                db.run_query(query=f"UPDATE posts SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id={post_id}")
+            else:
+                db.run_query(query=f"UPDATE posts SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id={post_id}")
+    else:
+        vote_value = 1 if vote == 'up' else -1
+        db.run_query(query=f"INSERT INTO votes (user_id, post_id, vote) VALUES ({user_id}, {post_id}, {vote_value})")
+        if vote == 'up':
+            db.run_query(query=f"UPDATE posts SET upvotes = upvotes + 1 WHERE id={post_id}")
+        elif vote == 'down':
+            db.run_query(query=f"UPDATE posts SET downvotes = downvotes + 1 WHERE id={post_id}")
+
+    db.close()
+    return redirect(url_for('home'))
+
+
 # @app.route('/feed/top')
 #
 #

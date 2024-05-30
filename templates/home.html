@@ -8,40 +8,47 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 </head>
 
-<nav class="navbar">
-  <a href="home.html"><img
-      src="https://i.redd.it/new-reddit-logo-official-v0-6sjpe15p0d3c1.jpg?width=1200&format=pjpg&auto=webp&s=ccfb8d487375f31eaa5f0f8d88d4152ec85dea6d"
-      class="logo"></a>
-  <form>
-    <label class="search-bar"><input type="text" class="search" placeholder="      Search Reddit"></label>
-
-  </form>
-  <div class="user-actions">
-    <button href="{{ url_for('create_post') }}" class="create_post">Create Post</button>
-    <button href="{{ url_for('logout') }}" class="logout">Logout</button>
-  </div>
-</nav>
-
-
 <body>
+  <nav class="navbar">
+    <a href="{{ url_for('home') }}"><img
+        src="https://i.redd.it/new-reddit-logo-official-v0-6sjpe15p0d3c1.jpg?width=1200&format=pjpg&auto=webp&s=ccfb8d487375f31eaa5f0f8d88d4152ec85dea6d"
+        class="logo"></a>
+    <form>
+      <label class="search-bar"><input type="text" class="search" placeholder="Search Reddit"></label>
+    </form>
+    <div class="user-actions">
+      <a href="{{ url_for('create_post') }}" class="create_post">Create Post</a>
+      <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+  </nav>
+
   <main>
-    <div class=" content">
+    <div class="content">
       <div class="posts">
         {% for post in posts %}
         <div class="post">
           <div class="post-vote">
-            <button>⬆️</button>
-            <span>123</span>
-            <button>⬇️</button>
+            <form method="post" action="{{ url_for('vote_post', post_id=post[0], vote='up') }}">
+              <button type="submit">⬆️</button>
+            </form>
+            <span>{{ post[5] }}</span>
+            <form method="post" action="{{ url_for('vote_post', post_id=post[0], vote='down') }}">
+              <button type="submit">⬇️</button>
+            </form>
           </div>
           <div class="post-content">
-            <h2><a href=" {{ url_for('view_post', post_id=post[0]) }}">{{ post[1] }}</a></h2>
+            <h2><a href="{{ url_for('view_post', post_id=post[0]) }}">{{ post[1] }}</a></h2>
             <p>Posted by {{ post[3] }} on {{ post[4] }}</p>
+            {% if post[6] %}
+            <img src="{{ post[6] }}" alt="Post Image" class="post-image">
+            {% endif %}
             <p>{{ post[2] }}</p>
           </div>
         </div>
         {% endfor %}
       </div>
-  </div>
+    </div>
   </main>
-  </body>
+</body>
+
+</html>
