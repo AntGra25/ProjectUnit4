@@ -65,13 +65,47 @@ hr {
   background-repeat: no-repeat;
 }
 
+.sidebar {
+  width: 20%;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-left: 1px solid #dddfe0;
+  height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  right: 0;
+  top: 60px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
 .post {
   display: flex;
   background-color: white;
   border-radius: 5px;
   overflow: hidden;
   margin-top: 50px;
-  width: 80%;
+  width: 75%;
 }
 
 .post-vote {
@@ -95,6 +129,11 @@ hr {
 
 .post-content h2 {
   margin: 0;
+}
+
+.post-description {
+  margin-top: 10px;
+  font-style: italic;
 }
 
 .post-content p {

@@ -1,0 +1,168 @@
+html {
+  height: 100%;
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100vh;
+  width: 100vw;
+}
+
+.navbar,
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  justify-content: space-between;
+  align-items: center;
+}
+
+body {
+  background-color: #dae0e6;
+}
+
+.logo {
+  width: 100px;
+  margin-left: 15px;
+}
+
+.navbar {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+hr {
+  border-top: 1px solid #dddfe0;
+}
+
+.search {
+  width: 150%;
+  height: 30px;
+  margin: 0 auto;
+  border: auto;
+  border-radius: 20px;
+  right: 40%;
+  background: #e5ebee;
+  background-image: url(https://cdn-icons-png.freepik.com/256/54/54481.png?semt=ais_hybrid);
+  position: left;
+  background-size: 20px;
+  background-repeat: no-repeat;
+}
+
+.sidebar {
+  width: 20%;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-left: 1px solid #dddfe0;
+  height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  right: 0;
+  top: 60px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.post {
+  display: flex;
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 50px;
+  width: 75%;
+}
+
+.post-vote {
+  background-color: #f8f9fa;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-vote button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.post-content {
+  padding: 10px;
+}
+
+.post-content h2 {
+  margin: 0;
+}
+
+.post-description {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.post-content p {
+  margin: 5px 0;
+}
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+main .content {
+  display: flex;
+  margin: 20px;
+}
+
+.posts {
+  flex: 3;
+}
+
+button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.create_post {
+  background-color: white;
+  border: 1px solid black;
+  color: #ff4500;
+  border-color: #ff4500;
+}
+
+.logout {
+  background-color: #ff4500;
+  border: 0px solid black;
+  color: white;
+  margin-right: 20px;
+}
+
+.create_post:hover {
+  background-color: #dae0e6;
+}
+
+.logout:hover {
+  background-color: #e03e00;
+}

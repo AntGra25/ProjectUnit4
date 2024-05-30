@@ -66,9 +66,15 @@ def login():
 @app.route('/home')
 def home():
     db = DatabaseWorker('Reddit.db')
-    posts = db.search(query='SELECT posts.id, posts.title, posts.content, users.username, posts.post_time, posts.upvotes - posts.downvotes, posts.image_url FROM posts JOIN users ON posts.user_id = users.id', multiple=True)
+    posts = db.search(query='''SELECT posts.id, posts.title, posts.content, users.username, posts.post_time, 
+                               posts.upvotes - posts.downvotes, posts.subreddit, posts.image_url 
+                               FROM posts 
+                               JOIN users ON posts.user_id = users.id 
+                               ORDER BY posts.post_time DESC''', multiple=True)
+    subreddits = db.search(query='SELECT name FROM subreddits', multiple=True)
     db.close()
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts, subreddits=subreddits)
+
 
 
 @app.route('/logout')
@@ -210,6 +216,61 @@ def vote_post(post_id, vote):
 
     db.close()
     return redirect(url_for('home'))
+
+
+@app.route('/subreddit/<string:subreddit_name>', methods=['GET', 'POST'])
+def view_subreddit(subreddit_name):
+    user_id = request.cookies.get('user_id')
+    db = DatabaseWorker('Reddit.db')
+    subreddit = db.search(query=f"SELECT id, name, description FROM subreddits WHERE name='{subreddit_name}'", multiple=False)
+
+    if not subreddit:
+        flash('Subreddit not found.')
+        return redirect(url_for('home'))
+
+    subreddit_id = subreddit[0]
+    followers = db.search(query=f"SELECT COUNT(*) FROM user_subreddits WHERE subreddit_id={subreddit_id}", multiple=False)[0]
+    following = db.search(query=f"SELECT * FROM user_subreddits WHERE subreddit_id={subreddit_id} AND user_id={user_id}", multiple=False)
+
+    posts = db.search(query=f'''SELECT posts.id, posts.title, posts.content, users.username, posts.post_time, 
+                               posts.upvotes - posts.downvotes, posts.image_url 
+                               FROM posts 
+                               JOIN users ON posts.user_id = users.id 
+                               WHERE posts.subreddit='{subreddit_name}' 
+                               ORDER BY posts.post_time DESC''', multiple=True)
+
+    subreddit_data = {
+        'id': subreddit[0],
+        'name': subreddit[1],
+        'description': subreddit[2],
+        'followers': followers,
+        'following': bool(following)
+    }
+
+    db.close()
+    return render_template('subreddit.html', subreddit=subreddit_data, posts=posts)
+
+@app.route('/subreddit/<string:subreddit_name>/follow', methods=['POST'])
+def follow_subreddit(subreddit_name):
+    user_id = request.cookies.get('user_id')
+    db = DatabaseWorker('Reddit.db')
+    subreddit = db.search(query=f"SELECT id FROM subreddits WHERE name='{subreddit_name}'", multiple=False)
+    if subreddit:
+        subreddit_id = subreddit[0]
+        db.run_query(query=f"INSERT INTO user_subreddits (user_id, subreddit_id) VALUES ({user_id}, {subreddit_id})")
+    db.close()
+    return redirect(url_for('view_subreddit', subreddit_name=subreddit_name))
+
+@app.route('/subreddit/<string:subreddit_name>/unfollow', methods=['POST'])
+def unfollow_subreddit(subreddit_name):
+    user_id = request.cookies.get('user_id')
+    db = DatabaseWorker('Reddit.db')
+    subreddit = db.search(query=f"SELECT id FROM subreddits WHERE name='{subreddit_name}'", multiple=False)
+    if subreddit:
+        subreddit_id = subreddit[0]
+        db.run_query(query=f"DELETE FROM user_subreddits WHERE user_id={user_id} AND subreddit_id={subreddit_id}")
+    db.close()
+    return redirect(url_for('view_subreddit', subreddit_name=subreddit_name))
 
 
 # @app.route('/feed/top')

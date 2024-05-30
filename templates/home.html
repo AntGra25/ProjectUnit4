@@ -10,9 +10,7 @@
 
 <body>
   <nav class="navbar">
-    <a href="{{ url_for('home') }}"><img
-        src="https://i.redd.it/new-reddit-logo-official-v0-6sjpe15p0d3c1.jpg?width=1200&format=pjpg&auto=webp&s=ccfb8d487375f31eaa5f0f8d88d4152ec85dea6d"
-        class="logo"></a>
+    <a href="{{ url_for('home') }}"><img src="https://i.redd.it/new-reddit-logo-official-v0-6sjpe15p0d3c1.jpg?width=1200&format=pjpg&auto=webp&s=ccfb8d487375f31eaa5f0f8d88d4152ec85dea6d" class="logo"></a>
     <form>
       <label class="search-bar"><input type="text" class="search" placeholder="Search Reddit"></label>
     </form>
@@ -38,14 +36,22 @@
           </div>
           <div class="post-content">
             <h2><a href="{{ url_for('view_post', post_id=post[0]) }}">{{ post[1] }}</a></h2>
-            <p>Posted by {{ post[3] }} on {{ post[4] }}</p>
-            {% if post[6] %}
-            <img src="{{ post[6] }}" alt="Post Image" class="post-image">
+            <p class="post-description">{{ post[2] }}</p>
+            <p>Posted by {{ post[3] }} in <a href="{{ url_for('view_subreddit', subreddit_name=post[6]) }}">{{ post[6] }}</a> on {{ post[4] }}</p>
+            {% if post[7] %}
+            <img src="{{ post[7] }}" alt="Post Image" class="post-image">
             {% endif %}
-            <p>{{ post[2] }}</p>
           </div>
         </div>
         {% endfor %}
+      </div>
+      <div class="sidebar">
+        <h3>Subreddits</h3>
+        <ul>
+          {% for subreddit in subreddits %}
+          <li><a href="{{ url_for('view_subreddit', subreddit_name=subreddit[0]) }}">{{ subreddit[0] }}</a></li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
   </main>
