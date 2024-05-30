@@ -1,10 +1,20 @@
-from flask import Flask
+import os
+
 from flask import Flask, render_template, request, redirect, url_for, make_response, flash
+from werkzeug.utils import secure_filename
 from tools import DatabaseWorker, check_hash, make_hash
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+app.config['UPLOAD_FOLDER'] = 'static'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -41,7 +51,7 @@ def login():
         user = db.search(f"SELECT * FROM users WHERE username='{uname}'")
         db.close()
 
-        if user and check_hash(password, user[2]):
+        if user and check_hash(password, user[3]):
             user_id = user[0]
             response = make_response(redirect(url_for('home')))
             response.set_cookie('user_id', str(user[0]))
@@ -61,6 +71,57 @@ def home():
     return render_template('home.html', posts=posts)
 
 
+@app.route('/logout')
+def logout():
+    response = make_response(redirect(url_for('login')))
+    response.set_cookie('user_id', "", expires=0)
+    return response
+
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+def view_post(post_id):
+    db = DatabaseWorker('Reddit.db')
+    post = db.search(query=f'SELECT posts.id, posts.title, posts.content, posts.image_url, users.username, posts.post_time FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id={post_id}', multiple=False)
+    comments = db.search(query=f'SELECT comments.id, comments.content, users.username, comments.created_at FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id={post_id}', multiple=True)
+
+    if request.method == 'POST':
+        content = request.form.get('comment')
+        user_id = request.cookies.get('user_id')
+        db.run_query(query=f"INSERT INTO comments (post_id, user_id, content) VALUES ({post_id}, {user_id}, '{content}')")
+        db.close()
+        return redirect(url_for('view_post', post_id=post_id))
+
+    db.close()
+    return render_template('view_post.html', post=post, comments=comments)
+
+
+
+@app.route('/create_post', methods=['GET', 'POST'])
+def create_post():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        subreddit = request.form.get('subreddit')
+        user_id = request.cookies.get('user_id')
+        file = request.files['image']
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            image_url = url_for('static', filename='uploads/' + filename)
+        else:
+            image_url = None
+
+        db = DatabaseWorker('Reddit.db')
+        db.run_query(
+            query=f"INSERT INTO posts (title, content, user_id, upvotes, downvotes, subreddit, image_url) VALUES ('{title}', '{content}', {user_id}, 0, 0, '{subreddit}', '{image_url}')")
+        db.close()
+        return redirect(url_for('home'))
+
+    db = DatabaseWorker('Reddit.db')
+    subreddits = db.search(query='SELECT name FROM subreddits', multiple=True)
+    db.close()
+    return render_template('create_post.html', subreddits=subreddits)
 # @app.route('/feed/top')
 #
 #
