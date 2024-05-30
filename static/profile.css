@@ -1,0 +1,133 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #dae0e6;
+  margin: 0;
+}
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  margin-top: 100px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.navbar {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  top: 0;
+}
+
+.logo {
+  width: 100px;
+  margin-left: 15px;
+}
+
+hr {
+  border-top: 1px solid #dddfe0;
+}
+
+.search {
+  width: 150%;
+  height: 30px;
+  margin: 0 auto;
+  border: auto;
+  border-radius: 20px;
+  right: 40%;
+  background: #e5ebee;
+  background-image: url(https://cdn-icons-png.freepik.com/256/54/54481.png?semt=ais_hybrid);
+  position: left;
+  background-size: 20px;
+  background-repeat: no-repeat;
+}
+
+button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.create_post {
+  background-color: white;
+  border: 1px solid black;
+  color: #ff4500;
+  border-color: #ff4500;
+}
+
+.logout {
+  background-color: #ff4500;
+  border: 0px solid black;
+  color: white;
+  margin-right: 20px;
+}
+
+.create_post:hover {
+  background-color: #dae0e6;
+}
+
+.profile-header h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.profile-header p {
+  font-size: 1.2em;
+  color: #6c757d;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section h2 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ff4500;
+  padding-bottom: 5px;
+}
+
+.list-group-item {
+  font-size: 1.1em;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.logout:hover {
+  background-color: #e03e00;
+}

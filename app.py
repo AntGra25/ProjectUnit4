@@ -67,6 +67,7 @@ def login():
 def home():
     db = DatabaseWorker('Reddit.db')
     posts = db.search("SELECT * FROM posts", multiple=True)
+    print(posts)
     db.close()
     return render_template('home.html', posts=posts)
 
