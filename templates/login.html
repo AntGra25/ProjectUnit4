@@ -9,19 +9,23 @@
 </head>
 
 <body>
-    <div class="w-50p content">
-        <form method="post">
-            <div class="container">
-                <label for="uname"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" name="uname" required>
+    <div class="login-container">
+        <div class="login-box">
+            <img src="https://www.redditinc.com/assets/images/site/Reddit_Icon_FullColor-1_2023-11-29-161416_munx.jpg"
+                alt="Reddit Logo" class="logo">
+            <form method="post">
+                <div class="container">
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="uname" required>
 
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" required>
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required>
 
-                <button type="submit">Login</button>
-                <span>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></span>
-            </div>
-        </form>
+                    <button type="submit">Login</button>
+                    <span>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></span>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 
