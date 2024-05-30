@@ -77,6 +77,37 @@ def logout():
     response.set_cookie('user_id', "", expires=0)
     return response
 
+
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    db = DatabaseWorker('Reddit.db')
+
+    # Fetch user details
+    user = db.search(query=f"SELECT username, description FROM users WHERE id={user_id}", multiple=False)
+
+    # Fetch subreddits followed by user
+    subreddits = db.search(
+        query=f"SELECT subreddits.name FROM subreddits JOIN user_subreddits ON subreddits.id = user_subreddits.subreddit_id WHERE user_subreddits.user_id={user_id}",
+        multiple=True)
+
+    # Fetch users followed by user
+    following = db.search(
+        query=f"SELECT users.username FROM users JOIN user_followers ON users.id = user_followers.follower_id WHERE user_followers.user_id={user_id}",
+        multiple=True)
+
+    # Fetch followers of the user
+    followers = db.search(
+        query=f"SELECT users.username FROM users JOIN user_followers ON users.id = user_followers.user_id WHERE user_followers.follower_id={user_id}",
+        multiple=True)
+
+    # Fetch posts created by the user
+    posts = db.search(query=f"SELECT id, title, content, post_time FROM posts WHERE user_id={user_id}", multiple=True)
+
+    db.close()
+    return render_template('profile.html', user=user, subreddits=subreddits, following=following, followers=followers,
+                           posts=posts)
+
+
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def view_post(post_id):
     db = DatabaseWorker('Reddit.db')
