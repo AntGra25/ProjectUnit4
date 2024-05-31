@@ -53,12 +53,7 @@
         <ul class="list-group">
           {% for subreddit in subreddits %}
           <li class="list-group-item">
-            {{ subreddit[0] }}
-            {% if is_own_profile %}
-            <form method="post" action="{{ url_for('unfollow_subreddit', subreddit_name=subreddit[0]) }}" class="inline-form">
-              <button type="submit" class="btn btn-danger btn-sm">Unfollow</button>
-            </form>
-            {% endif %}
+            <a href="{{ url_for('view_subreddit', subreddit_name=subreddit[0]) }}">{{ subreddit[0] }}</a>
           </li>
           {% endfor %}
         </ul>
