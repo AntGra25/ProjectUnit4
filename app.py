@@ -7,7 +7,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
@@ -84,34 +84,46 @@ def logout():
     return response
 
 
-@app.route('/profile/<int:user_id>')
+@app.route('/profile/<int:user_id>', methods=['GET'])
 def profile(user_id):
+    current_user_id = request.cookies.get('user_id')
+    is_own_profile = current_user_id == str(user_id)
     db = DatabaseWorker('Reddit.db')
-
-    # Fetch user details
     user = db.search(query=f"SELECT username, description FROM users WHERE id={user_id}", multiple=False)
-
-    # Fetch subreddits followed by user
-    subreddits = db.search(
-        query=f"SELECT subreddits.name FROM subreddits JOIN user_subreddits ON subreddits.id = user_subreddits.subreddit_id WHERE user_subreddits.user_id={user_id}",
-        multiple=True)
-
-    # Fetch users followed by user
-    following = db.search(
-        query=f"SELECT users.username FROM users JOIN user_followers ON users.id = user_followers.follower_id WHERE user_followers.user_id={user_id}",
-        multiple=True)
-
-    # Fetch followers of the user
-    followers = db.search(
-        query=f"SELECT users.username FROM users JOIN user_followers ON users.id = user_followers.user_id WHERE user_followers.follower_id={user_id}",
-        multiple=True)
-
-    # Fetch posts created by the user
+    subreddits = db.search(query=f"SELECT subreddits.name FROM subreddits JOIN user_subreddits ON subreddits.id = user_subreddits.subreddit_id WHERE user_subreddits.user_id={user_id}", multiple=True)
+    following = db.search(query=f"SELECT users.username, users.id FROM users JOIN user_followers ON users.id = user_followers.user_id WHERE user_followers.follower_id={user_id}", multiple=True)
+    followers = db.search(query=f"SELECT users.username, users.id FROM users JOIN user_followers ON users.id = user_followers.follower_id WHERE user_followers.user_id={user_id}", multiple=True)
     posts = db.search(query=f"SELECT id, title, content, post_time FROM posts WHERE user_id={user_id}", multiple=True)
-
+    is_following = db.search(query=f"SELECT 1 FROM user_followers WHERE user_id={user_id} AND follower_id={current_user_id}", multiple=False) is not None
     db.close()
-    return render_template('profile.html', user=user, subreddits=subreddits, following=following, followers=followers,
-                           posts=posts)
+    return render_template('profile.html', user=user, subreddits=subreddits, following=following, followers=followers, posts=posts, is_own_profile=is_own_profile, is_following=is_following, user_id=user_id)
+
+@app.route('/update_description/<int:user_id>', methods=['POST'])
+def update_description(user_id):
+    current_user_id = request.cookies.get('user_id')
+    if current_user_id != str(user_id):
+        return redirect(url_for('profile', user_id=user_id))
+
+    description = request.form.get('description')
+    db = DatabaseWorker('Reddit.db')
+    db.run_query(query=f"UPDATE users SET description='{description}' WHERE id={user_id}")
+    db.close()
+    return redirect(url_for('profile', user_id=user_id))
+
+@app.route('/toggle_follow_user/<int:user_id>', methods=['POST'])
+def toggle_follow_user(user_id):
+    current_user_id = request.cookies.get('user_id')
+    if current_user_id == str(user_id):
+        return redirect(url_for('profile', user_id=user_id))
+
+    db = DatabaseWorker('Reddit.db')
+    is_following = db.search(query=f"SELECT 1 FROM user_followers WHERE user_id={user_id} AND follower_id={current_user_id}", multiple=False) is not None
+    if is_following:
+        db.run_query(query=f"DELETE FROM user_followers WHERE user_id={user_id} AND follower_id={current_user_id}")
+    else:
+        db.run_query(query=f"INSERT INTO user_followers (user_id, follower_id) VALUES ({user_id}, {current_user_id})")
+    db.close()
+    return redirect(url_for('profile', user_id=user_id))
 
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])

@@ -16,6 +16,7 @@
     </form>
     <div class="user-actions">
       <a href="{{ url_for('create_post') }}" class="create_post">Create Post</a>
+      <a href="{{ url_for('profile', user_id=request.cookies.get('user_id')) }}" class="profile">Profile</a>
       <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
   </nav>
