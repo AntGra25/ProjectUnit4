@@ -66,7 +66,7 @@ def login():
 @app.route('/home')
 def home():
     db = DatabaseWorker('Reddit.db')
-    posts = db.search(query='''SELECT posts.id, posts.title, posts.content, users.username, posts.post_time, 
+    posts = db.search(query='''SELECT posts.id, posts.title, posts.content, users.id AS user_id, users.username, posts.post_time, 
                                posts.upvotes - posts.downvotes, posts.subreddit, posts.image_url 
                                FROM posts 
                                JOIN users ON posts.user_id = users.id 
@@ -129,8 +129,9 @@ def toggle_follow_user(user_id):
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def view_post(post_id):
     db = DatabaseWorker('Reddit.db')
-    post = db.search(query=f'SELECT posts.id, posts.title, posts.content, posts.image_url, users.username, posts.post_time FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id={post_id}', multiple=False)
-    comments = db.search(query=f'SELECT comments.id, comments.content, users.username, comments.created_at FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id={post_id}', multiple=True)
+    post = db.search(query=f'SELECT posts.id, posts.title, posts.content, users.id AS user_id, posts.image_url, users.username, posts.post_time FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id={post_id}', multiple=False)
+    print(post)
+    comments = db.search(query=f'SELECT comments.id, comments.content, users.id AS user_id, users.username, comments.created_at FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id={post_id}', multiple=True)
 
     if request.method == 'POST':
         content = request.form.get('comment')
@@ -284,29 +285,6 @@ def unfollow_subreddit(subreddit_name):
     db.close()
     return redirect(url_for('view_subreddit', subreddit_name=subreddit_name))
 
-
-# @app.route('/feed/top')
-#
-#
-# @app.route('/subreddit/<str:sub_name>/')
-#
-#
-# @app.route('/subreddit/<str:sub_name>/comments/<str:post_name>/')
-#
-#
-# @app.route('/subreddit/<str:sub_name>/submit_post')
-#
-#
-# @app.route('/user/<str:user_name>/')
-#
-#
-# @app.route('/profile')
-#
-#
-# @app.route('/profile/edit')
-#
-#
-# @app.route('/search')
 
 if __name__ == '__main__':
     app.run()

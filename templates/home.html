@@ -30,7 +30,7 @@
             <form method="post" action="{{ url_for('vote_post', post_id=post[0], vote='up') }}">
               <button type="submit">⬆️</button>
             </form>
-            <span>{{ post[5] }}</span>
+            <span>{{ post[6] }}</span>
             <form method="post" action="{{ url_for('vote_post', post_id=post[0], vote='down') }}">
               <button type="submit">⬇️</button>
             </form>
@@ -38,9 +38,9 @@
           <div class="post-content">
             <h2><a href="{{ url_for('view_post', post_id=post[0]) }}">{{ post[1] }}</a></h2>
             <p class="post-description">{{ post[2] }}</p>
-            <p>Posted by {{ post[3] }} in <a href="{{ url_for('view_subreddit', subreddit_name=post[6]) }}">{{ post[6] }}</a> on {{ post[4] }}</p>
-            {% if post[7] %}
-            <img src="{{ post[7] }}" alt="Post Image" class="post-image">
+            <p>Posted by <a href="{{ url_for('profile', user_id=post[3]) }}">{{ post[4] }}</a> in <a href="{{ url_for('view_subreddit', subreddit_name=post[7]) }}">{{ post[7] }}</a> on {{ post[5] }}</p>
+            {% if post[8] %}
+            <img src="{{ post[8] }}" alt="Post Image" class="post-image">
             {% endif %}
           </div>
         </div>

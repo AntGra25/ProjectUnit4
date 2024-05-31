@@ -26,11 +26,11 @@
 <div class="container">
     <div class="post">
         <h1>{{ post[1] }}</h1>
-        {% if post[3] %}
-        <img src="{{ post[3] }}" alt="Post Image" class="post-image">
+        {% if post[4] %}
+        <img src="{{ post[4] }}" alt="Post Image" class="post-image">
         {% endif %}
         <p class="post-content">{{ post[2] }}</p>
-        <p class="post-author">Posted by {{ post[4] }} on {{ post[5] }}</p>
+        <p class="post-author">Posted by <a href="{{ url_for('profile', user_id=post[3]) }}">{{ post[5] }}</a> on {{ post[6] }}</p>
     </div>
     <div class="comments-section">
         <h2>Comments</h2>
@@ -38,7 +38,7 @@
             {% for comment in comments %}
             <div class="comment">
                 <p>{{ comment[1] }}</p>
-                <p class="comment-author">Commented by {{ comment[2] }} on {{ comment[3] }}</p>
+                <p class="comment-author">Commented by <a href="{{ url_for('profile', user_id=comment[2]) }}">{{ comment[3] }}</a> on {{ comment[4] }}</p>
                 <div class="comment-actions">
                     <a href="{{ url_for('edit_comment', post_id=post[0], comment_id=comment[0]) }}" class="btn btn-secondary">Edit</a>
                     <form method="post" action="{{ url_for('delete_comment', post_id=post[0], comment_id=comment[0]) }}" class="d-inline">
