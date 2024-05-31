@@ -128,9 +128,9 @@ def toggle_follow_user(user_id):
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def view_post(post_id):
+    current_user_id = request.cookies.get('user_id')
     db = DatabaseWorker('Reddit.db')
     post = db.search(query=f'SELECT posts.id, posts.title, posts.content, users.id AS user_id, posts.image_url, users.username, posts.post_time FROM posts JOIN users ON posts.user_id = users.id WHERE posts.id={post_id}', multiple=False)
-    print(post)
     comments = db.search(query=f'SELECT comments.id, comments.content, users.id AS user_id, users.username, comments.created_at FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id={post_id}', multiple=True)
 
     if request.method == 'POST':
@@ -141,7 +141,7 @@ def view_post(post_id):
         return redirect(url_for('view_post', post_id=post_id))
 
     db.close()
-    return render_template('view_post.html', post=post, comments=comments)
+    return render_template('view_post.html', post=post, comments=comments, current_user_id=int(current_user_id))
 
 
 @app.route('/post/<int:post_id>/edit_comment/<int:comment_id>', methods=['GET', 'POST'])
