@@ -1,9 +1,7 @@
 import os
-
 from flask import Flask, render_template, request, redirect, url_for, make_response, flash
 from werkzeug.utils import secure_filename
 from tools import DatabaseWorker, check_hash, make_hash
-from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
