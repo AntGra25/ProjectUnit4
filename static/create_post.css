@@ -82,7 +82,7 @@ label {
   box-sizing: border-box;
 }
 
-button {
+button, .custom-btn {
   display: block;
   width: 100%;
   padding: 10px;
@@ -94,7 +94,7 @@ button {
   font-size: 16px;
 }
 
-button:hover {
+button:hover, .custom-btn:hover {
   background-color: #e03e00;
 }
 
