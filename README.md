@@ -320,7 +320,7 @@ using algorithms to implement these features, I was able to create a functional 
 
 ## Criteria D: Functionality
 
-[20240602-0625-50.3556384.mp4](..%2F..%2FAppData%2FLocal%2FPackages%2FMicrosoft.ScreenSketch_8wekyb3d8bbwe%2FTempState%2FRecordings%2F20240602-0625-50.3556384.mp4)
+https://youtu.be/jzBXdMxbLVU
 
 ## Criteria E: Evaluation
 
