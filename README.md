@@ -29,6 +29,7 @@
 * Werkzeug
 * os
 * Passlib
+* ChatGPT to generate css and populate databases for testing
 
 ### Code snippets
 
@@ -319,6 +320,8 @@ using algorithms to implement these features, I was able to create a functional 
 
 ## Criteria D: Functionality
 
+[20240602-0625-50.3556384.mp4](..%2F..%2FAppData%2FLocal%2FPackages%2FMicrosoft.ScreenSketch_8wekyb3d8bbwe%2FTempState%2FRecordings%2F20240602-0625-50.3556384.mp4)
+
 ## Criteria E: Evaluation
 
 ### Meeting the Success Criteria
@@ -368,3 +371,19 @@ suggested adding more indicators of the user's actions, such as making it clear 
 * Add options to sort posts by the number of upvotes and to set a limit on how long ago the post was made.
 * Add comment threads, were users can reply to comments, and those replies can be replied to as well.
 * Add a moderator role, where certain users can delete posts and comments, and ban users on the subreddit where they have the role.
+
+
+## Sources
+
+* [Flask Documentation](https://flask.palletsprojects.com/en/2.0.x/)
+* [SQLite Documentation](https://www.sqlite.org/docs.html)
+* [Jinja2 Documentation](https://jinja.palletsprojects.com/en/3.0.x/)
+* [Bootstrap Documentation](https://getbootstrap.com/docs/5.1/getting-started/introduction/)
+* [Werkzeug Documentation](https://werkzeug.palletsprojects.com/en/2.0.x/)
+* [Passlib Documentation](https://passlib.readthedocs.io/en/stable/)
+* [os Documentation](https://docs.python.org/3/library/os.html)
+* [html tags on w3schools](https://www.w3schools.com/tags/)
+* [css properties on w3schools](https://www.w3schools.com/cssref/)
+* [stackoverflow](https://stackoverflow.com/)
+* [uploading images in Flask](https://www.geeksforgeeks.org/how-to-upload-file-in-python-flask/)
+* [ChatGPT](https://chat.openai.com/)

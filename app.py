@@ -148,7 +148,7 @@ def edit_comment(post_id, comment_id):
     comment = db.search(query=f'SELECT content FROM comments WHERE id={comment_id}', multiple=False)
 
     if request.method == 'POST':
-        new_content = request.form.get('content')
+        new_content = request.form.get('comment')
         db.run_query(query=f"UPDATE comments SET content='{new_content}' WHERE id={comment_id}")
         db.close()
         return redirect(url_for('view_post', post_id=post_id))
